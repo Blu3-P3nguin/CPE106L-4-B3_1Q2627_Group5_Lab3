@@ -3,6 +3,7 @@
 Stores immutable audit-log records of successful orders, generates
 itemized receipts, and supports querying past transaction history.
 """
+
 from __future__ import annotations
 
 import uuid
@@ -79,8 +80,9 @@ class TransactionLog:
     def __init__(self) -> None:
         self._records: List[TransactionRecord] = []
 
-    def record_transaction(self, order: Order, payment_method_name: str,
-                            payment_transaction_id: str) -> TransactionRecord:
+    def record_transaction(
+        self, order: Order, payment_method_name: str, payment_transaction_id: str
+    ) -> TransactionRecord:
         """Create and store an immutable transaction record from a completed order."""
         line_items = tuple(
             TransactionLineItem(
