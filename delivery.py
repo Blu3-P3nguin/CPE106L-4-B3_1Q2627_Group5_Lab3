@@ -3,6 +3,7 @@
 Assigns available drivers to orders, updates live delivery status, and
 estimates delivery times.
 """
+
 from __future__ import annotations
 
 import random
@@ -64,7 +65,9 @@ class Driver:
 
     def go_offline(self) -> None:
         if self._status == DriverStatus.ON_DELIVERY:
-            raise DriverAssignmentError(f"Driver {self._name} cannot go offline mid-delivery.")
+            raise DriverAssignmentError(
+                f"Driver {self._name} cannot go offline mid-delivery."
+            )
         self._status = DriverStatus.OFFLINE
 
     def __repr__(self) -> str:
@@ -95,7 +98,9 @@ class DeliveryTracker:
     def assign_driver(self, order: Order) -> Driver:
         """Assign the next available driver to an order that is PREPARING."""
         if order.status != OrderStatus.PREPARING:
-            raise OrderStateError("A driver can only be assigned once an order is PREPARING.")
+            raise OrderStateError(
+                "A driver can only be assigned once an order is PREPARING."
+            )
         driver = self._find_available_driver()
         driver.assign(order.order_id)
         eta_minutes = self.AVG_TRANSIT_MINUTES + random.randint(-5, 10)
@@ -105,7 +110,9 @@ class DeliveryTracker:
     def estimate_delivery_time(self, order: Order) -> datetime:
         if order.order_id in self._eta:
             return self._eta[order.order_id]
-        return datetime.now() + timedelta(minutes=self.AVG_PREP_MINUTES + self.AVG_TRANSIT_MINUTES)
+        return datetime.now() + timedelta(
+            minutes=self.AVG_PREP_MINUTES + self.AVG_TRANSIT_MINUTES
+        )
 
     def complete_delivery(self, driver: Driver) -> None:
         """Free up a driver once their delivery is complete."""
